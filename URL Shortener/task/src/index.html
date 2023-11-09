@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <title>URL Shortener</title>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+    <input type="text" id="input-url" placeholder="Enter a url" />
+    <button type="submit" id="button-create">Create</button>
+    <ol id="list-url"></ol>
+    <script>
+        // Identify key elements
+        let buttonCreate = document.getElementById('button-create');
+        let inputUrl = document.getElementById('input-url');
+        let listUrl = document.getElementById('list-url');
+        // Add error message to body (but hidden)
+        let errorText = document.createElement("p");
+        errorText.textContent = "Please enter a valid url";
+        errorText.hidden = true;
+        listUrl.after(errorText);
+        // Add functionality to button
+        buttonCreate.addEventListener("click", function() {
+            let inputUrlVal = inputUrl.value;
+            // Check for URL validity
+            let urlCheckRegex = /https:\/\/\w+\.com\/?\w*/; // https://example.com/123
+            let newUrlCheckRegex = /https?:\/\/[\w.]+\.[a-z]\/?[\w.\/]*/;
+            // https://upload.wikimedia.org/wikipedia/commons/2/21/Hello_World_Brian_Kernighan_1978.jpg
+            if (newUrlCheckRegex.test(inputUrlVal)) {
+                // Remove error message
+                errorText.hidden = true;
+                // Create short link ...
+                let shortLink = document.createElement("a");
+                shortLink.href = inputUrlVal;
+                shortLink.target = "_blank";
+                let shortLinkText = "localhost/";
+                // Use Base36 binary-to-text encoding scheme, slice to 5 characters
+                let randomCharSet = Math.random().toString(36).substring(2,7);
+                shortLinkText += randomCharSet;
+                shortLink.textContent = shortLinkText;
+                // Create text ...
+                let linkText = " - " + inputUrlVal;
+                // Create list item ...
+                let newListItem = document.createElement("li");
+                newListItem.append(shortLink);
+                newListItem.append(linkText);
+                // Add to DOM ...
+                listUrl.append(newListItem);
+            } else {
+                // Show error message
+                errorText.hidden = false;
+            }
+        });
+    </script>
+</body>
+</html>
